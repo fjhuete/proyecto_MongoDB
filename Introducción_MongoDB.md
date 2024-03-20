@@ -1,4 +1,4 @@
-# MongoDB
+# Introducción a MongoDB
 ## Conexión a MongoDB
 ### Cadena de conexión
 ~~~
@@ -177,7 +177,7 @@ db.colección.aggregate({$out: "colección"}
 ## Índices
 ### Índices de un sólo campo: createIndex()
 ~~~
-db.colección.createIndex({campo:1 | -1}, {restricción:true})
+db.colección.createIndex({campo:1 | -1}, {restriction:true})
 ~~~
 - 1: ascendente
 - -1: descendente
@@ -214,3 +214,184 @@ db.colección.hideIndex("nombre" | {campo: 1 | -1})
 db.colección.dropindex("nombre" | {campo: 1 | -1})
 ~~~
 Si se usa `db.colección.dropIndex()`: borra todos los índices.
+
+# MongoDB con Python
+## Inserciones
+### Insertar un documento
+1. Definir una variable (db) como referencia a la base de datos:
+`db = client.NombreBD`
+
+2. Definir una variable (coleccion) como referencia a la colección que se va a usar:
+`coleccion = db.NombreColección`
+
+3. Definir una variable de tipo diccionario con el contenido del documento:
+`documento = {ContenidoDelDocuemnto}`
+
+4. Insertar el nuevo documento con el método `insert_one` y asignarle una variable:
+`result = coleccion.insert_one(documento)`
+
+5. Cerrar el cliente:
+`client.close()`
+
+### Insertar varios documentos
+1. Definir una variable (db) como referencia a la base de datos:
+`db = client.NombreBD`
+
+2. Definir una variable (coleccion) como referencia a la colección que se va a usar:
+`coleccion = db.NombreColección`
+
+3. Definir una variable de tipo lista de diccionarios con el contenido de los documentos:
+`documentos = [{Documento1},{Documento2},{DocumentoN}]`
+
+4. Insertar el nuevo documento con el método `insert_many` y asignarle una variable:
+`result = coleccion.insert_many(documentos)`
+
+5. Cerrar el cliente:
+`client.close()`
+
+## Consultas
+### Consultar un documento
+1. Definir una variable (db) como referencia a la base de datos:
+`db = client.NombreBD`
+
+2. Definir una variable (coleccion) como referencia a la colección que se va a usar:
+`coleccion = db.NombreColección`
+
+3. Definir una variable de tipo diccionario con el campo de búsqueda:
+`documento = {"CampoDeBúsqueda": Valor}`
+
+4. Buscar el documento con el método `find_one` y asignarle una variable:
+`result = coleccion.find_one(documento)`
+
+5. Cerrar el cliente:
+`client.close()`
+
+### Consultar varios documentos
+1. Definir una variable (db) como referencia a la base de datos:
+`db = client.NombreBD`
+
+2. Definir una variable (coleccion) como referencia a la colección que se va a usar:
+`coleccion = db.NombreColección`
+
+3. Definir una variable de tipo diccionario con el criterio de búsqueda:
+`documentos = ["CampoDeBúsqeda": Valor]`
+
+4. Buscar los documentos con el método `find` y asignarles una variable de tipo cursor:
+`cursor = coleccion.find(documentos)`
+
+5. Para mostrar el resultado inicializar un contador a 0 y recorrer el cursor con un bucle for:
+~~~
+num_docs = 0
+for documento in cursor:
+    num_docs += 1
+    pprint.pprint(documento)
+    print()
+print("Nº de documentos: " + str(num_docs))
+~~~
+6. Cerrar el cliente:
+`client.close()`
+
+## Actualizar documentos
+### Actualizar un documento
+1. Definir una variable (db) como referencia a la base de datos:
+`db = client.NombreBD`
+
+2. Definir una variable (coleccion) como referencia a la colección que se va a usar:
+`coleccion = db.NombreColección`
+
+3. Definir una variable de tipo diccionario con el campo de búsqueda:
+`documento = {"CampoDeBúsqueda": Valor}`
+
+4. Definir una variable de tipo diccionario con la actualización:
+`actualizar = {"$operador": {"campo": valor}}
+
+5. Buscar y actualizar el documento con el método `update_one` y asignarle una variable:
+`result = coleccion.update_one(documento, actualizar)`
+
+6. Cerrar el cliente:
+`client.close()`
+
+### Actualizar varios documentos
+1. Definir una variable (db) como referencia a la base de datos:
+`db = client.NombreBD`
+
+2. Definir una variable (coleccion) como referencia a la colección que se va a usar:
+`coleccion = db.NombreColección`
+
+3. Definir una variable de tipo diccionario con el campo de búsqueda:
+`documento = {"CampoDeBúsqueda": Valor}`
+
+4. Definir una variable de tipo diccionario con la actualización:
+`actualizar = {"$operador": {"campo": valor}}
+
+5. Buscar y actualizar el documento con el método `update_many` y asignarle una variable:
+`result = coleccion.update_many(documento, actualizar)`
+
+6. Para ver el número de documentos que coinciden con el filtro de búsqueda y el número de documentos que se han actualizado:
+~~~
+print("Documents matched: " + str(result.matched_count))
+print("Documents updated: " + str(result.modified_count))
+~~~
+
+7. Cerrar el cliente:
+`client.close()`
+
+## Eliminar documentos
+### Eliminar un documento
+1. Definir una variable (db) como referencia a la base de datos:
+`db = client.NombreBD`
+
+2. Definir una variable (coleccion) como referencia a la colección que se va a usar:
+`coleccion = db.NombreColección`
+
+3. Definir una variable de tipo diccionario con el campo de búsqueda:
+`documento = {"CampoDeBúsqueda": Valor}`
+
+4. Buscar y eliminar el documento con el método `delete_one` y asignarle una variable:
+`result = coleccion.delete_one(documento, actualizar)`
+
+5. Cerrar el cliente:
+`client.close()`
+
+### Eliminar varios documentos
+1. Definir una variable (db) como referencia a la base de datos:
+`db = client.NombreBD`
+
+2. Definir una variable (coleccion) como referencia a la colección que se va a usar:
+`coleccion = db.NombreColección`
+
+3. Definir una variable de tipo diccionario con el criterio de búsqueda:
+`documentos = {"CampoDeBúsqeda": Valor}`
+
+4. Buscar y eliminar los documentos con el método `delete_many` y asignarles una variable:
+`result = coleccion.delete_many(documentos)`
+
+5. Cerrar el cliente:
+`client.close()`
+
+##Agregaciones
+1. Definir una variable (db) como referencia a la base de datos:
+`db = client.NombreBD`
+
+2. Definir una variable (coleccion) como referencia a la colección que se va a usar:
+`coleccion = db.NombreColección`
+
+3. Definir una variable de tipo diccionario con cada etapa de agregación:
+`etapa = {"$operador": {"campo": valor}}
+
+4. Definir una variable de tipo lista con cada una de las etapas de agregación:
+`agregacion = [etapa1, etapa2, etapaN]`
+
+5. Ejecutar la agregación con el método `aggregate` y asignarle una variable de tipo cursor:
+`cursor = coleccion.delete_many(documentos)`
+
+6. Para mostrar los resultados, recorrer el cursor con un bucle for:
+~~~
+for documento in cursor:
+	pprint.pprint(documento)
+~~~
+
+7. Cerrar el cliente:
+`client.close()`
+
+
