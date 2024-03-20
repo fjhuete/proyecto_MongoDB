@@ -1,0 +1,47 @@
+{
+      "broadcasters": [
+        "SVT"
+      ],
+      "year": 2024,
+      "arena": "Malmö Arena",
+      "city": "Malmö",
+      "country": "SE",
+      "slogan": "United By Music",
+      "voting": "Televoting from participating countries \\u002B Online voting \\u0022Rest of the world\\u0022 (1,2,3,4,5,6,7,8,10,12 points) and national juries (1,2,3,4,5,6,7,8,10,12 points)",
+      "presenters": [
+        "Petra Mede",
+        "Malin Åkerman"
+      ],
+      "contestants": [
+        {
+          "broadcaster": "SVT",
+	  "country": "SE",
+          "artist": "Marcus & Martinus",
+          "song": "Unforgettable",
+          "writers": [
+            "Joy Deb",
+            "Linnea Deb",
+            "Jimmy 'Joker' Thörnfeldt",
+            "Marcus Gunnarsen",
+            "Martinus Gunnarsen",
+          ]
+        }
+      ],
+      "rounds": [
+        {
+          "name": "final",
+          "date": "2024-05-11",
+          "time": "19:00:00",
+         },
+        {
+          "name": "semifinal1",
+          "date": "2024-05-07",
+          "time": "19:00:00",
+         },
+        {
+          "name": "semifinal2",
+          "date": "2024-05-09",
+          "time": "19:00:00",
+         }
+      ]
+    }
