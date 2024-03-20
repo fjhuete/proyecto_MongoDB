@@ -322,7 +322,7 @@ print("Nº de documentos: " + str(num_docs))
 `documento = {"CampoDeBúsqueda": Valor}`
 
 4. Definir una variable de tipo diccionario con la actualización:
-`actualizar = {"$operador": {"campo": valor}}
+`actualizar = {"$operador": {"campo": valor}}`
 
 5. Buscar y actualizar el documento con el método `update_many` y asignarle una variable:
 `result = coleccion.update_many(documento, actualizar)`
@@ -369,7 +369,7 @@ print("Documents updated: " + str(result.modified_count))
 5. Cerrar el cliente:
 `client.close()`
 
-##Agregaciones
+## Agregaciones
 1. Definir una variable (db) como referencia a la base de datos:
 `db = client.NombreBD`
 
@@ -392,4 +392,4 @@ for documento in cursor:
 ~~~
 
 7. Cerrar el cliente:
-`client.close()`
+    client.close()
