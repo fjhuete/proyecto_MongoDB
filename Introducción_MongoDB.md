@@ -393,5 +393,3 @@ for documento in cursor:
 
 7. Cerrar el cliente:
 `client.close()`
-
-
