@@ -377,7 +377,7 @@ print("Documents updated: " + str(result.modified_count))
 `coleccion = db.NombreColección`
 
 3. Definir una variable de tipo diccionario con cada etapa de agregación:
-`etapa = {"$operador": {"campo": valor}}
+`etapa = {"$operador": {"campo": valor}}`
 
 4. Definir una variable de tipo lista con cada una de las etapas de agregación:
 `agregacion = [etapa1, etapa2, etapaN]`
@@ -392,4 +392,4 @@ for documento in cursor:
 ~~~
 
 7. Cerrar el cliente:
-    client.close()
+`client.close()`
