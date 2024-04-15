@@ -1,20 +1,27 @@
 import funcionesMongoDB
 
+funcionesMongoDB.probarconexion()
+
 opcion = funcionesMongoDB.menu()
 
 while opcion != 0:
     if opcion == 1:
-        funcionesMongoDB.menu_eliminar()
-        funcionesMongoDB.menu()
+        funcionesMongoDB.eliminar()
 
-    if opcion == 2:
-        funcionesMongoDB.menu_insertar()
-        funcionesMongoDB.menu()
 
-    if opcion == 3:
-        funcionesMongoDB.menu_actualizar()
-        funcionesMongoDB.menu()
+    elif opcion == 2:
+        funcionesMongoDB.insertar()
 
-    if opcion == 4:
-        funcionesMongoDB.menu_consultar()
-        funcionesMongoDB.menu()
+
+    elif opcion == 3:
+        funcionesMongoDB.actualizar()
+
+
+    elif opcion == 4:
+        funcionesMongoDB.consultar()
+
+    else:
+        print("Error. Por favor, indica el número de la opción del menú que quieres ejectuar: ")
+    opcion = funcionesMongoDB.menu()
+
+funcionesMongoDB.cerrarcliente()
