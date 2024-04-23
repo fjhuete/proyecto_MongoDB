@@ -1,4 +1,4 @@
-import pymongo
+import pymongo, json,pprint
 from pymongo.mongo_client import MongoClient
 
 uri = "mongodb+srv://usuario:usuario@proyectomongodb.fpedozi.mongodb.net/?retryWrites=true&w=majority&appName=ProyectoMongoDB"
@@ -53,24 +53,32 @@ Eliminar documentos
     return opcion
 
 def eliminaruno():
+    while True:
+        try:
+            year = int(input("Indica el año que quieres eliminar: "))
+            break
+        except:
+            print("Ha habido un error. Por favor, indica el año correctamente: ") 
     try:
-        year = int("Indica el año que quieres eliminar: ")
-    except:
-        print("Ha habido un error. Por favor, indica el año correctamente: ") 
-
-    documento = {"year": year}
-    resultado = eurovision.delete_one(documento)
+        documento = {"year": year}
+        resultado = eurovision.delete_one(documento)
+        print("Documento eliminado con éxito\n",resultado)
+    except Exception as e:
+        print("Se ha producido un error al eliminar el docuemnto.\n",e)
     return resultado
 
 def eliminarvarios():
     try:
-        year1 = int("Indica el año mayor: ")
-        year2 = int("Indica el año menor: ")
+        year1 = int(input("Indica el año mayor: "))
+        year2 = int(input("Indica el año menor: "))
     except:
         print("Ha habido un error. Por favor, indica los años correctamente: ")
-    
-    documentos = {{"year": {"$and": [{"$lte": year1},{"$gte": year2}]}}}
-    resultado = eurovision.delete_many(documentos)
+    try:
+        documentos = {"$and": [{"year": {"$lte": year1}},{"year":{"$gte": year2}}]}
+        resultado = eurovision.delete_many(documentos)
+        print("Documentos eliminados con éxito\n",resultado)
+    except Exception as e:
+        print("Se ha producido un error al eliminar los docuemntos.\n",e)
     return resultado
 
 def eliminar():
@@ -101,35 +109,47 @@ Insertar documentos
             print("Error. Por favor, indica el número de la opción del menú que quieres ejectuar: ")
     return opcion
 
-def lecturafichero(ruta):
-    try:
-        fichero = open(ruta)
-        lineas = fichero.readlines()
-        fichero.close
-        documento = []
-        for linea in lineas:
-            documento.append(linea)
-    except:
-        print("Error en la lectura del fichero.")
-        return documento
-
 def insertaruno():
     try:
-        ruta = input("Indica la ruta absoluta al documento que quieres añadir: ")
-        documento = lecturafichero(ruta)
+        year = int(input("Escribe el año: "))
+        recinto = input("Escribe el nombre del recinto: ")
+        ciudad = input("Escribe el nombre de la ciudad: ")
+        pais = input("Indica el código del país: ")
+        documento = {
+            "year": year,
+            "arena": recinto,
+            "city": ciudad,
+            "country": pais,
+        }
         resultado = eurovision.insert_one(documento)
+        print("Documento inserado con éxito.",resultado)
     except:
         print("Error al insertar el documento.")
     return resultado
+    
 
 def insertarvarios():
+    documentos = []
+    cantidad = int(input("¿Cuántos documentos vas a añadir? "))
     try:
-        ruta = input("Indica la ruta absoluta al fichero con los documentos que quieres añadir: ")
-        documentos = lecturafichero(ruta)
-        resultado = eurovision.insert_many(documentos)
-    except:
-        print("Error al insertar el documento.")
+        for i in range (0,cantidad):
+            year = int(input("Indica la ruta absoluta al documento que quieres añadir: "))
+            recinto = input("Escribe el nombre del recinto: ")
+            ciudad = input("Escribe el nombre de la ciudad: ")
+            pais = input("Indica el código del país: ")
+            documento = {
+                "year": year,
+                "arena": recinto,
+                "city": ciudad,
+                "country": pais,
+            }
+        documentos.append(documento)
+        resultado = eurovision.bulk_write(documentos)
+        print("Documentos inserados con éxito.",resultado)
+    except Exception as e:
+        print("Error al insertar el documento.", e)
     return resultado
+    
 
 def insertar():
     opcion = menu_insertar()
@@ -160,8 +180,6 @@ Actualizar documentos
     return opcion
 
 def actualizaruno():
-    ruta = input("Indica la ruta absoluta al documento que quieres actualizar: ")
-    actualizacion = lecturafichero(ruta)
     while True:
         try:
             year = int(input("¿Qué año vas a actualizar? "))
@@ -171,16 +189,18 @@ def actualizaruno():
     while True:
         try:
             campo = input("¿Qué campo vas a actualizar?")
+            actualizacion = input("Escribe el nuevo valor para el campo: ")
             break
         except:
             print("Error. Indica el campo correctamente.")
     try:
         documento = {"year": year}
         actualizar = {"$set": {campo: actualizacion}}
-        result = eurovision.update_one(documento, actualizar)
-    except:
-        print("Error al actualizar.")
-    return result
+        resultado = eurovision.update_one(documento, actualizar)
+        print("Documento actualizado con éxito.",resultado)
+    except Exception as e:
+        print("Error al actualizar.\n",e)
+    return resultado
 
 def actualizarvarios():
     while True:
@@ -197,12 +217,13 @@ def actualizarvarios():
         except:
             print("Hay un error en los datos aportados.")
     try:
-        documento = {"year": year}
+        documento = {"year": {"$lt": year}}
         actualizar = {"$set": {campo, actualizacion}}
-        result = eurovision.update_many(documento, actualizar)
-    except:
-        print("Error al actualizar.")
-    return result
+        resultado = eurovision.update_many(documento, actualizar)
+        print("Documento actualizado con éxito.",resultado)
+    except Exception as e:
+        print("Error al actualizar.\n",e)
+    return resultado
 
 def actualizar():
     opcion = menu_actualizar()
@@ -251,26 +272,26 @@ def find(documento,filtro,orden):
             cursor = eurovision.find(documento,filtro).sort(orden)
         else:
             cursor = eurovision.find(documento,filtro)
-        num_docs = 0
-        for documento in cursor:
-            num_docs += 1
-            print(documento)
-        print()
-        print("Nº de documentos: " + str(num_docs))
+        #num_docs = 0
+        #for documento in cursor:
+            #num_docs += 1
+            #print(documento)
+        #print()
+        #print("Nº de documentos: " + str(num_docs))
     except Exception as e:
         print("Error en la consulta.\n" + str(e))
-        cursor = False
+         #cursor = False
     return cursor
 
 def aggregate(agregacion):
     try:
         cursor = eurovision.aggregate(agregacion)
-        num_docs = 0
-        for documento in cursor:
-            num_docs += 1
-            print(documento)
-        print()
-        print("Nº de documentos: " + str(num_docs))
+        #num_docs = 0
+        #for documento in cursor:
+            #num_docs += 1
+            #pprint.pprint(documento)
+        #print()
+        #print("Nº de documentos: " + str(num_docs))
     except Exception as e:
         print("Error en la consulta.\n" + str(e))
         cursor = False
@@ -281,6 +302,9 @@ def consulta1():
     filtro = {"year":1, "country":1, "city": 1, "_id":0}
     orden = {"year": 1}
     cursor = find(documento,filtro,orden)
+    print("Año\tCiudad\tPaís")
+    for documento in cursor:
+        print(documento["year"],"\t",documento["city"],"\t",documento["country"])
     return cursor
 
 def consulta2():
@@ -295,6 +319,9 @@ def consulta2():
     filtro = {"year":1, "city":1, "presenters":1, "_id":0}
     orden = {"year": -1}
     cursor = find(documento,filtro,orden)
+    print("Año\tCiudad\tPresentadores")
+    for documento in cursor:
+        print(documento["year"],"\t",documento["city"],"\t",documento["presenters"])
     return cursor
 
 def consulta3():
@@ -307,6 +334,11 @@ def consulta3():
     documento = {"year": year}
     filtro = {"contestants.song":1,"contestants.artist":1,"_id":0}
     cursor = find(documento,filtro,0)
+    for documento in cursor:
+        pprint.pprint(documento)
+    #print("Canción\tParticipante")
+    #for documento in cursor:
+        #print(documento["contestants.song"],"\t",documento["contestants.artist"])
     return cursor
 
 def consulta4():
@@ -321,9 +353,12 @@ def consulta4():
     unwind = {"$unwind": "$contestants"}
     match = {"$match": {"year": year, "contestants.bpm":{"$gt": bpmmin, "$lt": bpmmax}}}
     sort = {"$sort": {"contestants.bpm": -1}}
-    project = {"$project": {"contestants.artist": 1, "contestants.bpm": 1, "contestants.song": 1, "_id": 0}}
+    project = {"$project": {"nombre": "$contestants.artist", "ritmo": "$contestants.bpm", "cancion": "$contestants.song", "_id": 0}}
     agregacion = [unwind, match, sort, project]
     cursor = aggregate(agregacion)
+    print("Participante\tCanción\t\tRitmo")
+    for documento in cursor:
+        print(documento["nombre"],"\t",documento["cancion"],"\t",documento["ritmo"])
     return cursor
 
 def consulta5():
@@ -337,10 +372,13 @@ def consulta5():
     performances = {"$unwind": "$rounds.performances"}
     scores = {"$unwind": "$rounds.performances.scores"}
     match = {"$match": {"rounds.performances.scores.points": {"$gt": puntos}}}
-    project = {"$project": {"rounds.performances.contestantId": 1, "year": 1, "rounds.performances.scores.points": 1, "_id": 0}}
-    sort = {"$sort": {"rounds.performances.scores.points": 1}}
+    project = {"$project": {"ID": "$rounds.performances.contestantId", "year": "$year", "puntos": "$rounds.performances.scores.points", "_id": 0}}
+    sort = {"$sort": {"puntos": 1}}
     agregacion = [rounds, performances, scores, match, project, sort]
     cursor = aggregate(agregacion)
+    print("Año\tPuntuación\tID del participante")
+    for documento in cursor:
+        print(documento["year"],"\t",documento["puntos"],"\t\t",documento["ID"])
     return cursor
 
 def consulta6():
@@ -353,6 +391,10 @@ def consulta6():
     documento = {"presenters": nombre }
     filtro = {"year": 1,"presenters":1, "_id":0}
     cursor = find(documento,filtro,0)
+    print("Año\tPresentadores")
+    for documento in cursor:
+        print(documento["year"],"\t",documento["presenters"])
+    
     return cursor
 
 def consulta7():
@@ -365,6 +407,9 @@ def consulta7():
     documento = {"presenters":[nombre] }
     filtro = {"year": 1,"presenters":1, "_id":0}
     cursor = find(documento,filtro,0)
+    print("Año\tPresentadores")
+    for documento in cursor:
+        print(documento["year"],"\t",documento["presenters"])
     return cursor
 
 def consulta8():
@@ -381,6 +426,9 @@ def consulta8():
     documento = {"presenters": {"$all": nombres} }
     filtro = {"year": 1,"presenters":1, "_id":0}
     cursor = find(documento,filtro,0)
+    print("Año\tPresentadores")
+    for documento in cursor:
+        print(documento["year"],"\t",documento["presenters"])
     return cursor
 
 def consulta9():
@@ -393,6 +441,9 @@ def consulta9():
     documento = {"contestants.artist": nombre}
     filtro = {"year": 1, "_id":0}
     cursor = find(documento,filtro,0)
+    print("Años en los que ha participado: ")
+    for documento in cursor:
+        print(documento["year"])
     return cursor
 
 def consulta10():
@@ -406,6 +457,9 @@ def consulta10():
     filtro = {"year": 1, "_id":0}
     orden = {"year": -1}
     cursor = find(documento,filtro,orden)
+    print("Años en los que ha participado: ")
+    for documento in cursor:
+        print(documento["year"])
     return cursor
 
 def consulta11():
@@ -434,6 +488,9 @@ def consulta11():
     limit = {"$limit": 3}
     agregacion = [rounds, date, match, project, sort,limit]
     cursor = aggregate(agregacion)
+    print("Años:")
+    for documento in cursor:
+        print(documento["year"])
     return cursor
 
 def consulta12():
@@ -450,6 +507,9 @@ def consulta12():
     group = {"$group": {"_id": "$year", "CancionesMas"+str(puntos): {"$count": {}}}}
     agregacion = [rounds, performances, scores, match, group]
     cursor = aggregate(agregacion)
+    print("Año\tCanciones con más de ",str(puntos)," puntos.")
+    for documento in cursor:
+        print(documento["_id"],"\t",documento["CancionesMas"+str(puntos)])
     return cursor
 
 def consulta13():
@@ -457,6 +517,9 @@ def consulta13():
     group = {"$group": {"_id": "$contestants.broadcaster", "Participaciones": {"$count":{}}}}
     agregacion = [unwind, group]
     cursor = aggregate(agregacion)
+    print("Cadena\tNº de participaciones")
+    for documento in cursor:
+        print(documento["_id"],"\t",documento["Participaciones"])
     return cursor
 
 def consultar():

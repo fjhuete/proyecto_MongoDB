@@ -23,7 +23,7 @@
             "Linnea Deb",
             "Jimmy 'Joker' Thörnfeldt",
             "Marcus Gunnarsen",
-            "Martinus Gunnarsen",
+            "Martinus Gunnarsen"
           ]
         }
       ],
@@ -31,17 +31,17 @@
         {
           "name": "final",
           "date": "2024-05-11",
-          "time": "19:00:00",
+          "time": "19:00:00"
          },
         {
           "name": "semifinal1",
           "date": "2024-05-07",
-          "time": "19:00:00",
+          "time": "19:00:00"
          },
         {
           "name": "semifinal2",
           "date": "2024-05-09",
-          "time": "19:00:00",
+          "time": "19:00:00"
          }
       ]
     }
